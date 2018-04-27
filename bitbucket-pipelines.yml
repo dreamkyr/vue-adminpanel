@@ -1,0 +1,15 @@
+image: node:6.9.4
+pipelines:
+  custom:
+    build:
+      - step:
+          name: Deploy to dev server
+          caches:
+            - node
+          script:
+            - npm install
+            - npm run build
+            - apt-get update
+            - apt-get -qq install ncftp
+            - echo "Initiating push to dev server"
+            - ncftpput -v -u "$FTP_USER" -p "$FTP_PASS" -R $FTP_HOST /home/fbadmin/www/ dist/*
